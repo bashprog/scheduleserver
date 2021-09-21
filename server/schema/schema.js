@@ -10,6 +10,7 @@ import { Fly } from '../models/Fly';
 import { Comment } from '../models/Comment';
 
 import { generate_token } from "../tokenGenerator";
+import { Plane } from '../models/Plane';
 
 const UserType = new GraphQLObjectType({
     name: "User",
@@ -36,6 +37,7 @@ const FlyType = new GraphQLObjectType({
         date: {type: GraphQLString},
         duration: {type: GraphQLInt},
         author_id: {type: GraphQLString},
+        plane_id: {type: GraphQLString},
         author: {
             type: UserType,
             resolve(parent, args){
@@ -47,7 +49,21 @@ const FlyType = new GraphQLObjectType({
             resolve(parent, args){
                 return Comment.find({fly_id: parent._id})
             }
+        },
+        plane: {
+            type: PlaneType,
+            resolve(parent, args){
+                return Plane.find({_id: parent.plane_id})
+            }
         }
+    })
+})
+
+const PlaneType = new GraphQLObjectType({
+    name: "Plane",
+    fields: () => ({
+        _id: {type: GraphQLID},
+        name: {type: GraphQLString},
     })
 })
 
@@ -116,7 +132,7 @@ const Mutation = new GraphQLObjectType({
 const Query = new GraphQLObjectType({
     name: "Query",
     fields: {
-        getUserByToken: {
+        loginByToken: {
             type: UserType,
             args: {token: {type: GraphQLString}},
             resolve(parent, args){
@@ -170,6 +186,12 @@ const Query = new GraphQLObjectType({
             type: GraphQLList(FlyType),
             resolve(){
                 return Comment.find({})
+            }
+        },
+        getPlanes: {
+            type: GraphQLList(PlaneType),
+            resolve(){
+                return Plane.find({})
             }
         }
     }
