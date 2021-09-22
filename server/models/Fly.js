@@ -9,5 +9,4 @@ export const Fly = mongoose.model("Fly", {
     author_id: String,
     plane_id: String,
     comments: [{type: mongoose.Schema.Types.ObjectId, ref: "Comment"}],
-    plane: [{type: mongoose.Schema.Types.ObjectId, ref: "Plane"}]
 }, "Flys");

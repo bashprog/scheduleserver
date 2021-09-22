@@ -53,7 +53,7 @@ const FlyType = new GraphQLObjectType({
         plane: {
             type: PlaneType,
             resolve(parent, args){
-                return Plane.find({_id: parent.plane_id})
+                return Plane.findOne({_id: parent.plane_id})
             }
         }
     })
@@ -97,13 +97,15 @@ const Mutation = new GraphQLObjectType({
         },
         addFly: {
             type: FlyType,
-            args: {author_id: {type: GraphQLString}, date: {type: GraphQLDateTime}, duration: {type: GraphQLInt}},
+            args: {author_id: {type: GraphQLString}, date: {type: GraphQLDateTime}, duration: {type: GraphQLInt}, plane_id: {type: GraphQLString}},
             async resolve(parent, args){
                 const fly = new Fly({
                     author_id: args.author_id,
                     date: new Date(args.date),
-                    duration: args.duration
+                    duration: args.duration,
+                    plane_id: args.plane_id
                 });
+
                 return await fly.save();
             }
         },
@@ -188,7 +190,7 @@ const Query = new GraphQLObjectType({
                 return Comment.find({})
             }
         },
-        getPlanes: {
+        getAllPlanes: {
             type: GraphQLList(PlaneType),
             resolve(){
                 return Plane.find({})
