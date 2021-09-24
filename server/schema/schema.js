@@ -72,6 +72,8 @@ const CommentType = new GraphQLObjectType({
     fields: () => ({
         _id: {type: GraphQLID},
         comment: {type: GraphQLString},
+        fly_id: {type: GraphQLString},
+        author_id: {type: GraphQLString},
         author: {
             type: UserType,
             resolve(parent, args){
