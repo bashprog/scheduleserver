@@ -157,25 +157,42 @@ const Query = new GraphQLObjectType({
                 return User.find({})
             }
         },
+        getFlyById: {
+            type: FlyType,
+            args: {_id: {type: GraphQLString}},
+            resolve(parent, args){
+                return Fly.findOne({_id: args._id})
+            }
+        },
         getAllFlys: {
             type: GraphQLList(FlyType),
             resolve(){
                 return Fly.find({})
             }
         },
-        getFlyByDay: {
+        getDailyFlys: {
             type: GraphQLList(FlyType),
             args: {date: {type: GraphQLDateTime}},
             resolve(parent, args){
                 let today = new Date(args.date);
                 let tommorow = new Date(today).setDate(today.getDate() + 1);
-
                 return Fly.find({
                     date: {$gte: new Date(today), $lte: new Date(tommorow)}
                 })
             }
         },
-        getFlyByDate: {
+        getWeeklyFlys: {
+            type: GraphQLList(FlyType),
+            args: {date: {type: GraphQLDateTime}},
+            resolve(parent, args){
+                let today = new Date(args.date);
+                let pastWeek = new Date(today).setDate(today.getDate() + 7);
+                return Fly.find({
+                    date: {$gte: new Date(today), $lte: new Date(pastWeek)}
+                })
+            }
+        },
+        getFlysByDate: {
             type: GraphQLList(FlyType),
             args: {from: {type: GraphQLDateTime}, to: {type: GraphQLDateTime}},
             resolve(parent, args){
