@@ -98,6 +98,17 @@ const Mutation = new GraphQLObjectType({
                 )
             }
         },
+        updateUser: {
+            type: UserType,
+            args: {_id: {type: GraphQLString}, name: {type: GraphQLString},email: {type: GraphQLString}, password: {type: GraphQLString}},
+            resolve(parent, args){
+                return User.findOneAndUpdate(
+                    {_id: args._id},
+                    {name: args.name, email: args.email, password: args.password},
+                    {new: true} //{filter}{update}{new: true} - последний параметр если в ответе нужен обновленный вариант данных
+                )
+            }
+        },
         addFly: {
             type: FlyType,
             args: {author_id: {type: GraphQLString}, date: {type: GraphQLDateTime}, duration: {type: GraphQLInt}, plane_id: {type: GraphQLString}},
