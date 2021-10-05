@@ -6,6 +6,7 @@ export const User = mongoose.model("User", {
     email: String,
     name: String, 
     password: String, 
-    token: String, 
+    token: String,
+    role: String,
     flys: [{type: mongoose.Schema.Types.ObjectId, ref: "Fly"}]
 }, "Users");

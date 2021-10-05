@@ -20,6 +20,7 @@ const UserType = new GraphQLObjectType({
         name: {type: GraphQLString},
         password: {type: GraphQLString},
         token: {type: GraphQLString},
+        role: {type: GraphQLString},
         flys: {
             type: GraphQLList(FlyType),
             resolve(parent, args){
@@ -111,11 +112,26 @@ const Mutation = new GraphQLObjectType({
                 return await fly.save();
             }
         },
+        changeFly: {
+            type: FlyType,
+            args: {fly_id: {type: GraphQLString}, date: {type: GraphQLDateTime}, duration: {type: GraphQLInt}, plane_id: {type: GraphQLString}},
+            async resolve(parent, args){
+                return Fly.findOneAndUpdate(
+                    {_id: args.fly_id},
+                    {
+                        date: args.date,
+                        duration: args.duration,
+                        plane_id: args.plane_id 
+                    },
+                    {new: true}
+                )
+            }
+        },
         deleteFly: {
             type: FlyType,
-            args: {author_id: {type: GraphQLString}, fly_id: {type: GraphQLString}},
+            args: {fly_id: {type: GraphQLString}},
             async resolve(parent, args){
-                Fly.findOneAndDelete({author_id: args.author_id, _id: args.fly_id}, (err) => {return err})
+                Fly.findOneAndDelete({_id: args.fly_id}, (err) => {return err})
             }
         },
         addComment: {
@@ -128,6 +144,13 @@ const Mutation = new GraphQLObjectType({
                     fly_id: args.fly_id
                 })
                 return await comment.save();
+            }
+        },
+        deleteComment: {
+            type: CommentType,
+            args: {comment_id: {type: GraphQLString}},
+            async resolve(parent, args){
+                Comment.findOneAndDelete({_id: args.comment_id}, (err) => {return err})
             }
         }
     }
