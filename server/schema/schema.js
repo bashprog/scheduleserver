@@ -178,7 +178,7 @@ const Mutation = new GraphQLObjectType({
             type: PlaneType,
             args: {_id: {type: GraphQLString}},
             async resolve(parent, args){
-                Plane.findOneAndDelete({_id: args._id}, err => {console.log(err)});
+                Plane.findOneAndDelete({_id: args._id}, (err) => {return err});
             }
         }
     }
