@@ -109,6 +109,13 @@ const Mutation = new GraphQLObjectType({
                 )
             }
         },
+        deleteUserById: {
+            type: UserType,
+            args: {_id: {type: GraphQLString}},
+            async resolve(parent, args){
+                User.findOneAndDelete({_id: args._id}, (err) => {return err})
+            }
+        },
         addFly: {
             type: FlyType,
             args: {author_id: {type: GraphQLString}, date: {type: GraphQLDateTime}, duration: {type: GraphQLInt}, plane_id: {type: GraphQLString}},
