@@ -109,6 +109,21 @@ const Mutation = new GraphQLObjectType({
                 )
             }
         },
+        addUser: {
+            type: UserType,
+            args: {name: {type: GraphQLString},email: {type: GraphQLString}, password: {type: GraphQLString}},
+            async resolve(parent, args){
+                const user = new User({
+                    name: args.name,
+                    email: args.email,
+                    password: args.password,
+                    role: "manager",
+                    token: "",
+                })
+
+                return await user.save();
+            }
+        },
         deleteUserById: {
             type: UserType,
             args: {_id: {type: GraphQLString}},
